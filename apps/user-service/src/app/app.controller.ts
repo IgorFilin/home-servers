@@ -1,12 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 
 @Controller()
 export class AppController {
   constructor() {}
 
-  @MessagePattern({ cmd: 'get_user' })
+  @MessagePattern({ cmd: 'create_user' })
   getUser(id: string) {
     return { id, name: 'John Doe', email: 'john@example.com' };
   }
