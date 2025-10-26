@@ -35,8 +35,8 @@ export class UserEntity {
   @Column()
   authToken: string;
 
-  @Column({ default: null })
-  userPhoto: string;
+  @Column({ nullable: true, default: null })
+  userPhoto: string | null;
 
   @Column({ default: 'user' })
   role: string;

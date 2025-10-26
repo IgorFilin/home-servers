@@ -1,13 +1,18 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Observable } from 'rxjs';
+import { catchError, EMPTY, Observable } from 'rxjs';
+import { IUser } from '@home-servers/shared';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get(':id')
-  getUser(@Param('id') id: string): Observable<any> {
-    return this.appService.getUser(id);
+  @Post('create_user')
+  getUser(@Body() user: IUser): Observable<any> {
+    return this.appService.getUser(user).pipe(
+      catchError((err) => {
+        return EMPTY;
+      })
+    );
   }
 }

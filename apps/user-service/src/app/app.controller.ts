@@ -1,12 +1,15 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
+import { AppService } from './app.service';
+import { IUser } from '@home-servers/shared';
 
 @Controller()
 export class AppController {
-  constructor() {}
+  constructor(private appService: AppService) {}
 
   @MessagePattern({ cmd: 'create_user' })
-  getUser(id: string) {
-    return { id, name: 'John Doe', email: 'john@example.com' };
+  getUser(user: IUser) {
+    const newUser = this.appService.createUser(user);
+    return newUser;
   }
 }

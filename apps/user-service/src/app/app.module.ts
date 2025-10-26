@@ -9,14 +9,18 @@ import {
   typeormConfiguration,
 } from '../configuration';
 import { JwtModule } from '@nestjs/jwt';
+import { UserRepository } from '../infrastructure/repository/user.repository';
+import { UserEntity } from '../infrastructure/entities/user.entity';
+import { UserKeyResetPass } from '../infrastructure/entities/userKeyResetPass.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(envConfiguration()),
     TypeOrmModule.forRootAsync(typeormConfiguration()),
     JwtModule.registerAsync(jwtConfiguration()),
+    TypeOrmModule.forFeature([UserEntity, UserKeyResetPass]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, UserRepository],
 })
 export class AppModule {}
