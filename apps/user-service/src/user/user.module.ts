@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import {
   envConfiguration,
   jwtConfiguration,
   typeormConfiguration,
-} from '../configuration';
+} from './configuration';
 import { JwtModule } from '@nestjs/jwt';
-import { UserRepository } from '../infrastructure/repository/user.repository';
-import { UserEntity } from '../infrastructure/entities/user.entity';
-import { UserKeyResetPass } from '../infrastructure/entities/userKeyResetPass.entity';
+import { UserRepository } from './infrastructure/repository/user.repository';
+import { UserEntity } from './infrastructure/entities/user.entity';
+import { UserKeyResetPass } from './infrastructure/entities/userKeyResetPass.entity';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { UserKeyResetPass } from '../infrastructure/entities/userKeyResetPass.en
     JwtModule.registerAsync(jwtConfiguration()),
     TypeOrmModule.forFeature([UserEntity, UserKeyResetPass]),
   ],
-  controllers: [AppController],
-  providers: [AppService, UserRepository],
+  controllers: [UserController],
+  providers: [UserService, UserRepository],
 })
-export class AppModule {}
+export class UserModule {}

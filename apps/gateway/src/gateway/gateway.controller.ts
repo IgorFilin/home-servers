@@ -1,7 +1,13 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { GatewayService } from './gateway.service';
 import { catchError, EMPTY, Observable } from 'rxjs';
-import { IUser, RegistrationDto } from '@home-servers/shared';
+import { RegistrationDto } from '@home-servers/shared';
 
 @Controller()
 export class GatewayController {
@@ -10,8 +16,11 @@ export class GatewayController {
   @Post('registration')
   registration(@Body() regBody: RegistrationDto): Observable<any> {
     return this.gatewayService.registration(regBody).pipe(
-      catchError((err) => {
-        return EMPTY;
+      catchError((error) => {
+        throw new HttpException(
+          error.message || 'Registration failed',
+          error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR
+        );
       })
     );
   }

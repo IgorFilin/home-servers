@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
-import { AppModule } from './app/app.module';
+import { UserModule } from './user/user.module';
+import { HttpExceptionFilter, RpcExceptionFilter } from '@home-servers/shared';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
+    UserModule,
     {
       transport: Transport.RMQ,
       options: {
@@ -16,6 +17,7 @@ async function bootstrap() {
       },
     }
   );
+  // app.useGlobalFilters(new RpcExceptionFilter());
   await app.listen();
 }
 bootstrap();
