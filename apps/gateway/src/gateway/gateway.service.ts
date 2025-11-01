@@ -1,7 +1,7 @@
 import { IUser, RegistrationDto, USER_SERVICE } from '@home-servers/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { defaultIfEmpty, Observable } from 'rxjs';
 
 @Injectable()
 export class GatewayService {
@@ -10,6 +10,8 @@ export class GatewayService {
   ) {}
 
   registration(userData: RegistrationDto): Observable<any> {
-    return this.userService.send({ cmd: 'registration' }, userData);
+    return this.userService
+      .send({ cmd: 'registration' }, userData)
+      .pipe(defaultIfEmpty(null));
   }
 }

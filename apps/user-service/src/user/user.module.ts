@@ -12,6 +12,8 @@ import { UserEntity } from './infrastructure/entities/user.entity';
 import { UserKeyResetPass } from './infrastructure/entities/userKeyResetPass.entity';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { CqrsModule } from '@nestjs/cqrs';
+import { RegistrationCommandHandler } from './use-cases/registration.use-case';
 
 @Module({
   imports: [
@@ -19,8 +21,9 @@ import { UserService } from './user.service';
     TypeOrmModule.forRootAsync(typeormConfiguration()),
     JwtModule.registerAsync(jwtConfiguration()),
     TypeOrmModule.forFeature([UserEntity, UserKeyResetPass]),
+    CqrsModule.forRoot(),
   ],
   controllers: [UserController],
-  providers: [UserService, UserRepository],
+  providers: [UserService, UserRepository, RegistrationCommandHandler],
 })
 export class UserModule {}

@@ -10,6 +10,9 @@ export class UserController {
   @MessagePattern({ cmd: 'registration' })
   async createUser(userData: RegistrationDto) {
     try {
+      const res = await this.userService.createUser(userData);
+      console.log('asd', res);
+      return res;
     } catch {
       throw new RpcException({
         statusCode: 400,
