@@ -12,7 +12,9 @@ export class UserController {
     try {
       const res = await this.userService.createUser(userData);
       return res;
-    } catch {
+    } catch (error) {
+      if (error instanceof RpcException) throw error;
+
       throw new RpcException({
         statusCode: 400,
         message: ERROR_EXEPTION.REGISTRATION,
