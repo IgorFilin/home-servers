@@ -32,9 +32,6 @@ export class UserEntity {
   @Column()
   acceptKey: string;
 
-  @Column()
-  authToken: string;
-
   @Column({ nullable: true, default: null })
   userPhoto: string | null;
 
