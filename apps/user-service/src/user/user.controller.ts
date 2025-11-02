@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, RpcException } from '@nestjs/microservices';
-import { IUser, RegistrationDto } from '@home-servers/shared';
+import { ERROR_EXEPTION, IUser, RegistrationDto } from '@home-servers/shared';
 import { UserService } from './user.service';
 
 @Controller()
@@ -11,12 +11,11 @@ export class UserController {
   async createUser(userData: RegistrationDto) {
     try {
       const res = await this.userService.createUser(userData);
-      console.log('asd', res);
       return res;
     } catch {
       throw new RpcException({
         statusCode: 400,
-        message: 'Ошибка регистрации',
+        message: ERROR_EXEPTION.REGISTRATION,
       });
     }
   }

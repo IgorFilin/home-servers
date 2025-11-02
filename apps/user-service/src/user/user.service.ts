@@ -11,7 +11,7 @@ export class UserService {
     private commandBus: CommandBus
   ) {}
 
-  async createUser(userData: RegistrationDto) {
+  createUser(userData: RegistrationDto) {
     return this.commandBus.execute(new RegistrationCommand(userData));
   }
 }

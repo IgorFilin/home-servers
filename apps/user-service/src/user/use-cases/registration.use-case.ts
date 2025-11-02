@@ -12,7 +12,7 @@ export class RegistrationCommandHandler
   implements ICommandHandler<RegistrationCommand>
 {
   async execute(command: RegistrationCommand) {
-    console.log('execute');
+    console.log('execute', command.userData);
     return {
       test: 'test',
     };
