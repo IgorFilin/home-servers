@@ -18,6 +18,29 @@
         }
       }
     },
+    "migration:gen": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node --project tsconfig.app.json ../../node_modules/typeorm/cli migration:generate src/migrations/{args.name} --pretty -d src/data-source.ts",
+        "forwardAllArgs": true,
+        "cwd": "apps/user-service"
+      }
+    },
+    "migration:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node --project tsconfig.app.json ../../node_modules/typeorm/cli migration:run -d src/data-source.ts",
+        "cwd": "apps/user-service"
+      }
+    },
+    "migration:create": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../node_modules/.bin/typeorm migration:create src/migrations/{args.name}",
+        "forwardAllArgs": true,
+        "cwd": "apps/user-service"
+      }
+    },
     "prune-lockfile": {
       "dependsOn": ["build"],
       "cache": true,
