@@ -1,15 +1,18 @@
 import { RegistrationDto } from '@home-servers/shared';
 import { compare, genSalt, hash } from 'bcrypt';
 import { randomBytes } from 'crypto';
+import { UserEntity } from '../infrastructure/entities/user.entity';
 
 export class UserDomain {
-  private constructor(
-    public readonly email: string,
-    public readonly login: string,
-    public password: string,
-    public readonly confirmRegKey: string,
-    public readonly ip: string
-  ) {}
+  private _id: string;
+  private _email: string;
+  private _name: string;
+  private _password: string;
+  private _acceptKey: string;
+  private _ip: string;
+  private _role: string;
+  private _createdAt: Date;
+  private _refreshTokens: string[] = [];
 
   public validatePassword(
     password: string,
@@ -22,19 +25,55 @@ export class UserDomain {
     const { password, email, name } = createUserDTO;
     const salt = await genSalt(10);
     const hashPassword = await hash(password, salt);
-    const confirmRegKey = randomBytes(5).toString('hex');
-    const ip = 'Скрыт';
+    const acceptKey = randomBytes(5).toString('hex');
+    const user = new UserDomain();
 
-    return new UserDomain(email, name, hashPassword, confirmRegKey, ip);
+    user._email = email;
+    user._name = name;
+    user._role = 'user';
+    user._ip = 'Скрыт';
+    user._acceptKey = acceptKey;
+    user._createdAt = new Date();
+    user._password = hashPassword;
+
+    return user;
   }
 
-  getPlainObjectData(): Partial<UserDomain> {
+  getPlainObjectData(): Partial<UserEntity> {
     return {
-      email: this.email,
-      login: this.login,
-      password: this.password,
-      confirmRegKey: this.confirmRegKey,
-      ip: this.ip,
+      email: this._email,
+      name: this._name,
+      password: this._password,
+      acceptKey: this._acceptKey,
+      ip: this._ip,
     };
+  }
+
+  get id(): string {
+    return this._id;
+  }
+  get email(): string {
+    return this._email;
+  }
+  get name(): string {
+    return this._name;
+  }
+  get password(): string {
+    return this._password;
+  }
+  get acceptKey(): string {
+    return this._acceptKey;
+  }
+  get ip(): string {
+    return this._ip;
+  }
+  get role(): string {
+    return this._role;
+  }
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+  get refreshTokens(): ReadonlyArray<any> {
+    return [...this._refreshTokens];
   }
 }

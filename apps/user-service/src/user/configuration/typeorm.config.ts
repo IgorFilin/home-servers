@@ -2,6 +2,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { UserEntity } from '../infrastructure/entities/user.entity';
 import { UserKeyResetPass } from '../infrastructure/entities/userKeyResetPass.entity';
+import { RefreshTokenEntity } from '../infrastructure/entities/token.entity';
 
 export function typeormConfiguration(): TypeOrmModuleAsyncOptions {
   return {
@@ -13,9 +14,8 @@ export function typeormConfiguration(): TypeOrmModuleAsyncOptions {
       username: configService.get('BD_USERNAME'),
       password: configService.get('BD_PASSWORD'),
       database: configService.get('BD_DATABASE'),
-      entities: [UserEntity, UserKeyResetPass],
+      entities: [UserEntity, UserKeyResetPass, RefreshTokenEntity],
       synchronize: false,
-      // autoLoadEntities: true,
     }),
     inject: [ConfigService],
   };

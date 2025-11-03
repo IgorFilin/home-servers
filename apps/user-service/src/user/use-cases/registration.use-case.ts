@@ -5,6 +5,7 @@ import { UserRepository } from '../infrastructure/repository/user.repository';
 import { RpcException } from '@nestjs/microservices';
 import { UserDomain } from '../domain/user.domain';
 import { JwtService } from '@nestjs/jwt';
+import { AuthService } from '../application/auth/auth.service';
 
 @Injectable()
 export class RegistrationCommand {
@@ -17,31 +18,27 @@ export class RegistrationCommandHandler
 {
   constructor(
     readonly userRepository: UserRepository,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private authService: AuthService
   ) {}
 
   async execute(command: RegistrationCommand) {
-    const { email, name, password } = command.userData;
+    const { email } = command.userData;
+
     const existedUser = await this.userRepository.findUser(email);
+
     if (existedUser) {
       throw new RpcException({
         statusCode: HttpStatus.CONFLICT,
-        message: ERROR_EXEPTION.USER_ALREADY_EXISTS || 'User already exists',
+        message: ERROR_EXEPTION.USER_ALREADY_EXISTS,
       });
     }
 
     const user = await UserDomain.create(command.userData);
-
-    const token = this.jwtService.sign(
-      {
-        name,
-      },
-      {
-        secret: '123123',
-        expiresIn: '3d',
-      }
-    );
     await this.userRepository.createUser(user);
-    return {};
+
+    return {
+      success: true,
+    };
   }
 }

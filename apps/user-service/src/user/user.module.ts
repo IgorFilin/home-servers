@@ -14,16 +14,27 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { CqrsModule } from '@nestjs/cqrs';
 import { RegistrationCommandHandler } from './use-cases/registration.use-case';
+import { RefreshTokenEntity } from './infrastructure/entities/token.entity';
+import { AuthService } from './application/auth/auth.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot(envConfiguration()),
     TypeOrmModule.forRootAsync(typeormConfiguration()),
     JwtModule.registerAsync(jwtConfiguration()),
-    TypeOrmModule.forFeature([UserEntity, UserKeyResetPass]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      UserKeyResetPass,
+      RefreshTokenEntity,
+    ]),
     CqrsModule.forRoot(),
   ],
   controllers: [UserController],
-  providers: [UserService, UserRepository, RegistrationCommandHandler],
+  providers: [
+    UserService,
+    UserRepository,
+    RegistrationCommandHandler,
+    AuthService,
+  ],
 })
 export class UserModule {}

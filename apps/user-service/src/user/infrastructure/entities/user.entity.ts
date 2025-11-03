@@ -3,11 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserKeyResetPass } from './userKeyResetPass.entity';
-import { IUserRoles } from '@home-servers/shared';
+import { RefreshTokenEntity } from './token.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -44,4 +45,8 @@ export class UserEntity {
   @OneToOne(() => UserKeyResetPass)
   @JoinColumn()
   resetPasswordKey: UserKeyResetPass;
+
+  @OneToMany(() => RefreshTokenEntity, (token) => token.user)
+  @JoinColumn()
+  refreshToken: RefreshTokenEntity[];
 }
