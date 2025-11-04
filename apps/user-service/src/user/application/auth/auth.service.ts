@@ -19,7 +19,7 @@ export class AuthService {
         sub: {
           id: generateData.id,
           email: generateData.email,
-          deviceId: randomUUID(),
+          deviceId: generateData.deviceId,
         },
       },
       {
@@ -33,7 +33,7 @@ export class AuthService {
         sub: {
           id: generateData.id,
           email: generateData.email,
-          deviceId: randomUUID(),
+          deviceId: generateData.deviceId,
         },
       },
       {

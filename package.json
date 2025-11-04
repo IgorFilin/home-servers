@@ -2,7 +2,10 @@
   "name": "@home-servers/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "migration:gen": "nx migration:gen",
+    "migration:run": "nx migration:run"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^11.0.0",

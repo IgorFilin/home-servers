@@ -19,6 +19,9 @@ export class RefreshTokenEntity {
   @Column()
   hashedToken: string;
 
+  @Column()
+  deviceId: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

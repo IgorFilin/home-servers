@@ -2,10 +2,11 @@ import { ERROR_EXEPTION, LoginDto } from '@home-servers/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UserRepository } from '../infrastructure/repository/user.repository';
-import { JwtService } from '@nestjs/jwt';
 import { AuthService } from '../application/auth/auth.service';
 import { RpcException } from '@nestjs/microservices';
-import { IGenerateJwtParams } from '../models';
+import { IGenerateJwtParams, IJwtSavedParams } from '../models';
+import { TokenRepository } from '../infrastructure/repository/token.repository';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class LoginCommand {
@@ -16,14 +17,18 @@ export class LoginCommand {
 export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
   constructor(
     readonly userRepository: UserRepository,
-    private authService: AuthService
+    private authService: AuthService,
+    private tokenRepository: TokenRepository
   ) {}
 
   async execute(command: LoginCommand) {
-    const { email } = command.userData;
+    const { email, password, deviceId } = command.userData;
+
     const user = await this.userRepository.findUser(email);
 
-    if (!user) {
+    const isUserPasswordValid = await compare(password, user.password);
+
+    if (!user || !isUserPasswordValid) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
         message: ERROR_EXEPTION.NOT_EXIST_USER,
@@ -32,9 +37,21 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     const generateJwtParams: IGenerateJwtParams = {
       id: user.id,
+      deviceId,
       email,
     };
+
+    await this.tokenRepository.delete(user.id, deviceId);
+
     const tokens = this.authService.getTokenPair(generateJwtParams);
+
+    const savedJwtRefresh: IJwtSavedParams = {
+      userId: user.id,
+      hashedToken: tokens.refreshToken,
+      deviceId,
+      user,
+    };
+    await this.tokenRepository.createToken(savedJwtRefresh);
 
     return {
       success: true,

@@ -17,6 +17,7 @@ import { RegistrationCommandHandler } from './use-cases/registration.use-case';
 import { RefreshTokenEntity } from './infrastructure/entities/token.entity';
 import { AuthService } from './application/auth/auth.service';
 import { LoginCommandHandler } from './use-cases/login.use-case';
+import { TokenRepository } from './infrastructure/repository/token.repository';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { LoginCommandHandler } from './use-cases/login.use-case';
   providers: [
     UserService,
     UserRepository,
+    TokenRepository,
     RegistrationCommandHandler,
     LoginCommandHandler,
     AuthService,
