@@ -17,7 +17,6 @@ async function bootstrap() {
       },
     }
   );
-  // app.useGlobalFilters(new RpcExceptionFilter());
   await app.listen();
 }
 bootstrap();

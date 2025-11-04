@@ -1,24 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { IGenerateJwtParams, IResponseGenerateTokens } from '../../models';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    readonly jwtService: JwtService,
-    readonly configService: ConfigService
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService
   ) {}
 
-  public getTokenPair(userName: string) {
-    //     {
-    //   "sub": "a1b2c3d4-...",   // ← UUID пользователя (не email!)
-    //   "iat": 1762196426,
-    //   "exp": 1762198226,
-    //   "jti": "x5y6z7..."       // ← уникальный ID токена (для чёрного списка или инвалидации)
-    // }
+  public getTokenPair(
+    generateData: IGenerateJwtParams
+  ): IResponseGenerateTokens {
     const accessToken = this.jwtService.sign(
       {
-        name: userName,
+        sub: {
+          id: generateData.id,
+          email: generateData.email,
+          deviceId: randomUUID(),
+        },
       },
       {
         secret: this.configService.get('JWT_SECRET'),
@@ -28,7 +30,11 @@ export class AuthService {
 
     const refreshToken = this.jwtService.sign(
       {
-        name: userName,
+        sub: {
+          id: generateData.id,
+          email: generateData.email,
+          deviceId: randomUUID(),
+        },
       },
       {
         secret: this.configService.get('JWT_SECRET'),

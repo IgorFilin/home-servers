@@ -3,10 +3,15 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { GatewayModule } from './gateway/gateway.module';
-import { HttpExceptionFilter } from '@home-servers/shared';
+import { ERROR_EXEPTION, HttpExceptionFilter } from '@home-servers/shared';
 
 async function bootstrap() {
   const app = await NestFactory.create(GatewayModule);
@@ -17,6 +22,18 @@ async function bootstrap() {
     credentials: true,
     exposedHeaders: ['Authorization'],
   });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      exceptionFactory: () => {
+        throw new HttpException(
+          ERROR_EXEPTION.VALIDATION_REG,
+          HttpStatus.BAD_REQUEST
+        );
+      },
+    })
+  );
   app.useGlobalFilters(new HttpExceptionFilter());
   const port = process.env.PORT || 3000;
   await app.listen(port);

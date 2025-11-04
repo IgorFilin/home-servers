@@ -16,6 +16,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { RegistrationCommandHandler } from './use-cases/registration.use-case';
 import { RefreshTokenEntity } from './infrastructure/entities/token.entity';
 import { AuthService } from './application/auth/auth.service';
+import { LoginCommandHandler } from './use-cases/login.use-case';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AuthService } from './application/auth/auth.service';
     UserService,
     UserRepository,
     RegistrationCommandHandler,
+    LoginCommandHandler,
     AuthService,
   ],
 })
