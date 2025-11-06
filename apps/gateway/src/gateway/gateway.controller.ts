@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Post,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { GatewayService } from './gateway.service';
 import { catchError, map, Observable } from 'rxjs';
@@ -14,6 +16,7 @@ import {
   RegistrationDto,
 } from '@home-servers/shared';
 import { Response } from 'express';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller()
 export class GatewayController {
@@ -42,14 +45,22 @@ export class GatewayController {
   ): Observable<any> {
     return this.gatewayService.login(loginBody).pipe(
       map((data) => {
-        const { refreshToken, accessToken } = data;
+        const { refreshToken, accessToken } = data.data.tokens;
         const expires = new Date();
         expires.setDate(expires.getDate() + 7);
+
         res.cookie('refreshToken', refreshToken, {
           httpOnly: false,
           expires,
         });
-        res.send({ accessToken });
+
+        const responseData = {
+          success: true,
+          data: {
+            accessToken,
+          },
+        };
+        res.send(responseData);
       }),
       catchError((error) => {
         throw new HttpException(
@@ -58,5 +69,11 @@ export class GatewayController {
         );
       })
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('test')
+  test() {
+    return this.gatewayService.test();
   }
 }

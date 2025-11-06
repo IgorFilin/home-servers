@@ -25,4 +25,10 @@ export class GatewayService {
       .send({ cmd: 'login' }, userData)
       .pipe(defaultIfEmpty(null));
   }
+
+  test(): Observable<any> {
+    return this.userService
+      .send({ cmd: 'test' }, {})
+      .pipe(defaultIfEmpty(null));
+  }
 }

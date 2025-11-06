@@ -1,4 +1,4 @@
-import { Controller, Res } from '@nestjs/common';
+import { Controller, Res, UseGuards } from '@nestjs/common';
 import { MessagePattern, RpcException } from '@nestjs/microservices';
 
 import {
@@ -7,6 +7,7 @@ import {
   RegistrationDto,
 } from '@home-servers/shared';
 import { UserService } from './user.service';
+import { JwtAuthGuard } from '../../../gateway/src/gateway/guards/jwt-auth.guard';
 
 @Controller()
 export class UserController {
@@ -30,13 +31,9 @@ export class UserController {
   @MessagePattern({ cmd: 'login' })
   async loginUser(userData: LoginDto) {
     try {
-      const { data } = await this.userService.loginUser(userData);
-      const { accessToken, refreshToken } = data.tokens;
-
-      return {
-        accessToken,
-        refreshToken,
-      };
+      const response = await this.userService.loginUser(userData);
+      console.log('res', response);
+      return response;
     } catch (error) {
       if (error instanceof RpcException) throw error;
 
@@ -45,5 +42,10 @@ export class UserController {
         message: ERROR_EXEPTION.LOGIN,
       });
     }
+  }
+
+  @MessagePattern({ cmd: 'test' })
+  async test() {
+    return { test: 'test' };
   }
 }

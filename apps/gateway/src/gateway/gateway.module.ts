@@ -3,9 +3,16 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { USER_SERVICE } from '@home-servers/shared';
 import { GatewayController } from './gateway.controller';
 import { GatewayService } from './gateway.service';
+import { JwtStrategy } from './strategies/auth/jwt.strategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    PassportModule,
     ClientsModule.register([
       {
         name: USER_SERVICE,
@@ -21,6 +28,6 @@ import { GatewayService } from './gateway.service';
     ]),
   ],
   controllers: [GatewayController],
-  providers: [GatewayService],
+  providers: [ConfigService, GatewayService, JwtStrategy],
 })
 export class GatewayModule {}
