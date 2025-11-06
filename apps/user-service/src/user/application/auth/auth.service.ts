@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { IGenerateJwtParams, IResponseGenerateTokens } from '../../models';
+import { IGenerateJwtParams } from '../../models';
+import { IJwtSubParams, IResponseGenerateTokens } from '@home-servers/shared';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
           id: generateData.id,
           email: generateData.email,
           deviceId: generateData.deviceId,
-        },
+        } as IJwtSubParams,
       },
       {
         secret: this.configService.get('JWT_SECRET'),
@@ -33,7 +34,7 @@ export class AuthService {
           id: generateData.id,
           email: generateData.email,
           deviceId: generateData.deviceId,
-        },
+        } as IJwtSubParams,
       },
       {
         secret: this.configService.get('JWT_SECRET'),

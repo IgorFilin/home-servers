@@ -25,7 +25,7 @@ export class RegistrationCommandHandler
   async execute(command: RegistrationCommand) {
     const { email } = command.userData;
 
-    const existedUser = await this.userRepository.findUser(email);
+    const existedUser = await this.userRepository.findUser({ email });
 
     if (existedUser) {
       throw new RpcException({

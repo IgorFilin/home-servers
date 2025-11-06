@@ -24,7 +24,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
   async execute(command: LoginCommand) {
     const { email, password, deviceId } = command.userData;
 
-    const user = await this.userRepository.findUser(email);
+    const user = await this.userRepository.findUser({ email });
 
     const isUserPasswordValid = await compare(password, user.password);
 

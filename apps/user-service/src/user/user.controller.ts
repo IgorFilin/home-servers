@@ -1,4 +1,4 @@
-import { Controller, Res, UseGuards } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessagePattern, RpcException } from '@nestjs/microservices';
 
 import {
@@ -7,7 +7,6 @@ import {
   RegistrationDto,
 } from '@home-servers/shared';
 import { UserService } from './user.service';
-import { JwtAuthGuard } from '../../../gateway/src/gateway/guards/jwt-auth.guard';
 
 @Controller()
 export class UserController {
@@ -44,8 +43,26 @@ export class UserController {
     }
   }
 
-  @MessagePattern({ cmd: 'test' })
-  async test() {
-    return { test: 'test' };
+  @MessagePattern({ cmd: 'userInfo' })
+  async getUserInfo({ userId }) {
+    try {
+      const response = await this.userService.getUserInfo(userId);
+      return {
+        success: true,
+        data: {
+          name: response.name,
+          id: response.id,
+          isAcceptKey: response.isAcceptKey,
+          role: response.role,
+        },
+      };
+    } catch (error) {
+      if (error instanceof RpcException) throw error;
+
+      throw new RpcException({
+        statusCode: 400,
+        message: ERROR_EXEPTION.NOT_EXIST_USER,
+      });
+    }
   }
 }

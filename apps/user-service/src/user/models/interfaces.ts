@@ -1,3 +1,4 @@
+import { IResponseGenerateTokens } from '@home-servers/shared';
 import { UserEntity } from '../infrastructure/entities/user.entity';
 
 export interface IGenerateJwtParams {
@@ -9,12 +10,6 @@ export interface IGenerateJwtParams {
 export interface IResponseJwtTokens {
   tokens: IResponseGenerateTokens;
 }
-
-export interface IResponseGenerateTokens {
-  accessToken: string;
-  refreshToken: string;
-}
-
 export interface IJwtSavedParams {
   userId: string;
   hashedToken: string;

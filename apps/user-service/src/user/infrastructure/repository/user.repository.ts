@@ -10,10 +10,8 @@ export class UserRepository {
     private userModel: Repository<UserEntity>
   ) {}
 
-  findUser(email: string) {
-    return this.userModel.findOneBy({
-      email,
-    });
+  findUser(options: Record<string, string>) {
+    return this.userModel.findOneBy(options);
   }
 
   async createUser(user: UserDomain) {

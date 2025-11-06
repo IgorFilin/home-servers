@@ -26,9 +26,9 @@ export class GatewayService {
       .pipe(defaultIfEmpty(null));
   }
 
-  test(): Observable<any> {
+  userInfo(userId: string): Observable<any> {
     return this.userService
-      .send({ cmd: 'test' }, {})
+      .send({ cmd: 'userInfo' }, { userId })
       .pipe(defaultIfEmpty(null));
   }
 }

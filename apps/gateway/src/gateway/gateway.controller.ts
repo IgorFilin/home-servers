@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import {
 } from '@home-servers/shared';
 import { Response } from 'express';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { Request } from 'express';
 
 @Controller()
 export class GatewayController {
@@ -72,8 +74,15 @@ export class GatewayController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('test')
-  test() {
-    return this.gatewayService.test();
+  @Get('me')
+  async getUserInfo(@Req() req: Request) {
+    const userId = req.user['userId'];
+    return this.gatewayService.userInfo(userId);
   }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Get('test')
+  // test() {
+  //   return this.gatewayService.test();
+  // }
 }
