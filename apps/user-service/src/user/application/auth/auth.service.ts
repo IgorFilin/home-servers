@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { IGenerateJwtParams } from '../../models';
 import { IJwtSubParams, IResponseGenerateTokens } from '@home-servers/shared';
+import type { StringValue } from 'ms';
 
 @Injectable()
 export class AuthService {
@@ -11,36 +12,41 @@ export class AuthService {
     private readonly configService: ConfigService
   ) {}
 
+  checkVerifyToken(refreshToken: string): boolean {
+    const isVerify = this.jwtService.verify(refreshToken);
+    return !!isVerify;
+  }
+
+  decodeToken(token: string): Record<string, string> & { sub: IJwtSubParams } {
+    return this.jwtService.decode(token);
+  }
+
+  checkValidDateExpToken(token: string): boolean {
+    const decodeToken = this.decodeToken(token);
+    return Number(decodeToken.exp) >= new Date().getTime();
+  }
+
+  createToken(generateData: IGenerateJwtParams, timeExt: number | StringValue) {
+    return this.jwtService.sign(
+      {
+        sub: {
+          id: generateData.id,
+          email: generateData.email,
+          deviceId: generateData.deviceId,
+        } as IJwtSubParams,
+      },
+      {
+        secret: this.configService.get('JWT_SECRET'),
+        expiresIn: timeExt,
+      }
+    );
+  }
+
   public getTokenPair(
     generateData: IGenerateJwtParams
   ): IResponseGenerateTokens {
-    const accessToken = this.jwtService.sign(
-      {
-        sub: {
-          id: generateData.id,
-          email: generateData.email,
-          deviceId: generateData.deviceId,
-        } as IJwtSubParams,
-      },
-      {
-        secret: this.configService.get('JWT_SECRET'),
-        expiresIn: '30m',
-      }
-    );
-
-    const refreshToken = this.jwtService.sign(
-      {
-        sub: {
-          id: generateData.id,
-          email: generateData.email,
-          deviceId: generateData.deviceId,
-        } as IJwtSubParams,
-      },
-      {
-        secret: this.configService.get('JWT_SECRET'),
-        expiresIn: '7d',
-      }
-    );
+    const accessToken = this.createToken(generateData, '30m');
+    const refreshToken = this.createToken(generateData, '7d');
 
     return {
       accessToken,

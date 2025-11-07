@@ -16,3 +16,8 @@ export interface IJwtSavedParams {
   user: UserEntity;
   deviceId: string;
 }
+
+export interface IJwtFindParams {
+  userId: string;
+  deviceId: string;
+}

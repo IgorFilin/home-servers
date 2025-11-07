@@ -1,12 +1,12 @@
 import { ERROR_EXEPTION, LoginDto } from '@home-servers/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserRepository } from '../infrastructure/repository/user.repository';
-import { AuthService } from '../application/auth/auth.service';
+import { UserRepository } from '../../infrastructure/repository/user.repository';
+import { AuthService } from '../../application/auth/auth.service';
 import { RpcException } from '@nestjs/microservices';
-import { IGenerateJwtParams, IJwtSavedParams } from '../models';
-import { TokenRepository } from '../infrastructure/repository/token.repository';
-import { compare } from 'bcrypt';
+import { IGenerateJwtParams, IJwtSavedParams } from '../../models';
+import { TokenRepository } from '../../infrastructure/repository/token.repository';
+import { compare, genSalt, hash } from 'bcrypt';
 
 @Injectable()
 export class LoginCommand {
@@ -45,9 +45,13 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     const tokens = this.authService.getTokenPair(generateJwtParams);
 
+    const salt = await genSalt(10);
+
+    const hashedToken = await hash(tokens.refreshToken, salt);
+
     const savedJwtRefresh: IJwtSavedParams = {
       userId: user.id,
-      hashedToken: tokens.refreshToken,
+      hashedToken: hashedToken,
       deviceId,
       user,
     };

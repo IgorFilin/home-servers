@@ -1,8 +1,3 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import {
   HttpException,
   HttpStatus,
@@ -12,6 +7,7 @@ import {
 import { NestFactory } from '@nestjs/core';
 import { GatewayModule } from './gateway/gateway.module';
 import { ERROR_EXEPTION, HttpExceptionFilter } from '@home-servers/shared';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(GatewayModule);
@@ -35,6 +31,7 @@ async function bootstrap() {
     })
   );
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.use(cookieParser());
   const port = process.env.PORT || 3000;
   await app.listen(port);
   Logger.log(

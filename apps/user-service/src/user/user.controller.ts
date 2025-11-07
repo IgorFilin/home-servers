@@ -7,10 +7,14 @@ import {
   RegistrationDto,
 } from '@home-servers/shared';
 import { UserService } from './user.service';
+import { AuthService } from './application/auth/auth.service';
 
 @Controller()
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService
+  ) {}
 
   @MessagePattern({ cmd: 'registration' })
   async createUser(userData: RegistrationDto) {
@@ -62,6 +66,31 @@ export class UserController {
       throw new RpcException({
         statusCode: 400,
         message: ERROR_EXEPTION.NOT_EXIST_USER,
+      });
+    }
+  }
+
+  @MessagePattern({ cmd: 'refreshToken' })
+  async refreshToken({ refreshToken }) {
+    console.log('ref', refreshToken);
+    try {
+      await this.userService.refreshToken(refreshToken);
+      // this.authService.check(refreshToken);
+      // const response = await this.userService.getUserInfo(userId);
+      return {
+        success: true,
+        data: {
+          tokens: {
+            accessToken: '',
+          },
+        },
+      };
+    } catch (error) {
+      if (error instanceof RpcException) throw error;
+
+      throw new RpcException({
+        statusCode: 400,
+        message: ERROR_EXEPTION.REFRESH_TOKEN_ERROR,
       });
     }
   }

@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { IApiResponse, LoginDto, RegistrationDto } from '@home-servers/shared';
-import { CommandBus } from '@nestjs/cqrs';
-import { RegistrationCommand } from './use-cases/registration.use-case';
-import { LoginCommand } from './use-cases/login.use-case';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { RegistrationCommand } from './use-cases/command/registration.use-case';
+import { LoginCommand } from './use-cases/command/login.use-case';
 import { IResponseJwtTokens } from './models';
 import { UserRepository } from './infrastructure/repository/user.repository';
+import { RefreshQuery } from './use-cases/query/refresh.use-case';
 
 @Injectable()
 export class UserService {
   constructor(
     private commandBus: CommandBus,
+    private queryBus: QueryBus,
     private userRepository: UserRepository
   ) {}
 
@@ -22,8 +24,11 @@ export class UserService {
   }
 
   async getUserInfo(userId: string) {
-    console.log('userId', userId);
     const user = await this.userRepository.findUser({ id: userId });
     return user;
+  }
+
+  refreshToken(refreshToken: string) {
+    return this.queryBus.execute(new RefreshQuery(refreshToken));
   }
 }

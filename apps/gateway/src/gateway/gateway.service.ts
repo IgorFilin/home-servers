@@ -31,4 +31,10 @@ export class GatewayService {
       .send({ cmd: 'userInfo' }, { userId })
       .pipe(defaultIfEmpty(null));
   }
+
+  refreshToken(refreshToken: string) {
+    return this.userService
+      .send({ cmd: 'refreshToken' }, { refreshToken })
+      .pipe(defaultIfEmpty(null));
+  }
 }

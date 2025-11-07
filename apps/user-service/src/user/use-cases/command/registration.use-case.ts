@@ -1,11 +1,11 @@
 import { ERROR_EXEPTION, RegistrationDto } from '@home-servers/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserRepository } from '../infrastructure/repository/user.repository';
+import { UserRepository } from '../../infrastructure/repository/user.repository';
 import { RpcException } from '@nestjs/microservices';
-import { UserDomain } from '../domain/user.domain';
+import { UserDomain } from '../../domain/user.domain';
 import { JwtService } from '@nestjs/jwt';
-import { AuthService } from '../application/auth/auth.service';
+import { AuthService } from '../../application/auth/auth.service';
 
 @Injectable()
 export class RegistrationCommand {
@@ -35,6 +35,7 @@ export class RegistrationCommandHandler
     }
 
     const user = await UserDomain.create(command.userData);
+
     await this.userRepository.createUser(user);
 
     return {

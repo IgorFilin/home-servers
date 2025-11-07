@@ -13,11 +13,12 @@ import { UserKeyResetPass } from './infrastructure/entities/userKeyResetPass.ent
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { CqrsModule } from '@nestjs/cqrs';
-import { RegistrationCommandHandler } from './use-cases/registration.use-case';
+import { RegistrationCommandHandler } from './use-cases/command/registration.use-case';
 import { RefreshTokenEntity } from './infrastructure/entities/token.entity';
 import { AuthService } from './application/auth/auth.service';
-import { LoginCommandHandler } from './use-cases/login.use-case';
+import { LoginCommandHandler } from './use-cases/command/login.use-case';
 import { TokenRepository } from './infrastructure/repository/token.repository';
+import { RefreshQueryHandler } from './use-cases/query/refresh.use-case';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { TokenRepository } from './infrastructure/repository/token.repository';
     TokenRepository,
     RegistrationCommandHandler,
     LoginCommandHandler,
+    RefreshQueryHandler,
     AuthService,
   ],
 })
