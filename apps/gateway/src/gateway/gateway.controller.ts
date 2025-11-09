@@ -56,7 +56,7 @@ export class GatewayController {
       map((data) => {
         const { refreshToken, accessToken } = data.data.tokens;
         const expires = new Date();
-        expires.setDate(expires.getDate() + 7);
+        expires.setDate(expires.getDate() + 2);
 
         res.cookie('refreshToken', refreshToken, {
           httpOnly: false,
@@ -92,25 +92,11 @@ export class GatewayController {
     }
 
     return this.gatewayService.refreshToken(refreshTokenReq).pipe(
-      map((data) => {
-        const { refreshToken = null, accessToken } = data.data.tokens;
-
-        if (refreshToken) {
-          const expires = new Date();
-          expires.setDate(expires.getDate() + 7);
-          res.cookie('refreshToken', refreshToken, {
-            httpOnly: false,
-            expires,
-          });
-        }
-
-        const responseData = {
-          success: true,
-          data: {
-            accessToken,
-          },
-        };
-        res.send(responseData);
+      map((responseData) => {
+        const responseStatus = responseData.success
+          ? HttpStatus.ACCEPTED
+          : HttpStatus.UNAUTHORIZED;
+        res.status(responseStatus).send(responseData);
       }),
       catchError((error) => {
         throw new HttpException(
@@ -119,13 +105,5 @@ export class GatewayController {
         );
       })
     );
-    // await new Promise((resolve) => setTimeout(() => resolve(true), 4000));
-    // return {
-    //   success: true,
-    //   data: {
-    //     accessToken:
-    //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTEyNjIzOTAyMiwiZXhwIjoyMjI2MjM5MDIyfQ.YkAjg0sJtIlLjKHVwlLo8gmzGQWLzovfgJfVodpw858',
-    //   },
-    // };
   }
 }

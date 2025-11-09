@@ -5,7 +5,6 @@ import { AuthService } from '../../application/auth/auth.service';
 import { compare } from 'bcrypt';
 import { RpcException } from '@nestjs/microservices';
 import { ERROR_EXEPTION } from '@home-servers/shared';
-import { access } from 'fs';
 
 export class RefreshQuery {
   constructor(public readonly refreshToken: string) {}
@@ -18,43 +17,60 @@ export class RefreshQueryHandler implements IQueryHandler<RefreshQuery> {
     private readonly authService: AuthService
   ) {}
 
+  private async invalidateTokenAndReturnError(
+    userId: string,
+    deviceId: string
+  ) {
+    await this.tokenRepository.delete(userId, deviceId);
+    return {
+      success: false,
+      data: null,
+    };
+  }
+
   async execute(query: RefreshQuery) {
     const refreshToken = query.refreshToken;
 
-    const decodeToken = this.authService.decodeToken(refreshToken);
+    const { sub = null } = this.authService.decodeToken(refreshToken);
+
+    const isValidExpDate = this.authService.checkVerifyToken(refreshToken);
+
+    if (!isValidExpDate) {
+      this.invalidateTokenAndReturnError(sub.id, sub.deviceId);
+    }
 
     const findParams: IJwtFindParams = {
-      userId: decodeToken.sub.id,
-      deviceId: decodeToken.sub.deviceId,
+      userId: sub?.id,
+      deviceId: sub?.deviceId,
     };
 
-    const { hashedToken } = await this.tokenRepository.findToken(findParams);
+    const { hashedToken = null } = await this.tokenRepository.findToken(
+      findParams
+    );
+
+    if (!hashedToken) {
+      this.invalidateTokenAndReturnError(sub.id, sub.deviceId);
+    }
 
     const isValidToken = await compare(refreshToken, hashedToken);
 
     if (!isValidToken) {
-      throw new RpcException({
-        statusCode: 400,
-        message: ERROR_EXEPTION.REFRESH_TOKEN_ERROR,
-      });
+      this.invalidateTokenAndReturnError(sub.id, sub.deviceId);
     }
 
-    const isValidExpDate =
-      this.authService.checkValidDateExpToken(refreshToken);
-
-    const responseBody = {};
-
-    if (!isValidExpDate) {
-    } else {
-      return {
-        accessToken: this.authService.createToken({
-          userId: decodeToken.sub.id,
-          deviceId: decodeToken.sub.deviceId,
-        }),
-      };
-    }
-
-    console.log('hashedToken', hashedToken);
-    return { accessToken: '...' };
+    return {
+      success: true,
+      data: {
+        tokens: {
+          accessToken: this.authService.createToken(
+            {
+              id: sub?.id,
+              deviceId: sub?.deviceId,
+            },
+            '30m'
+          ),
+        },
+      },
+    };
   }
 }

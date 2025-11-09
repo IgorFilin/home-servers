@@ -21,17 +21,11 @@ export class AuthService {
     return this.jwtService.decode(token);
   }
 
-  checkValidDateExpToken(token: string): boolean {
-    const decodeToken = this.decodeToken(token);
-    return Number(decodeToken.exp) >= new Date().getTime();
-  }
-
   createToken(generateData: IGenerateJwtParams, timeExt: number | StringValue) {
     return this.jwtService.sign(
       {
         sub: {
           id: generateData.id,
-          email: generateData.email,
           deviceId: generateData.deviceId,
         } as IJwtSubParams,
       },
@@ -46,8 +40,8 @@ export class AuthService {
     generateData: IGenerateJwtParams
   ): IResponseGenerateTokens {
     const accessToken = this.createToken(generateData, '30m');
-    const refreshToken = this.createToken(generateData, '7d');
-
+    const refreshToken = this.createToken(generateData, '2d');
+    console.log('refreshToken', refreshToken);
     return {
       accessToken,
       refreshToken,

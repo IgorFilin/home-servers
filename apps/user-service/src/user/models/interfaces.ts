@@ -3,7 +3,6 @@ import { UserEntity } from '../infrastructure/entities/user.entity';
 
 export interface IGenerateJwtParams {
   id: string;
-  email: string;
   deviceId: string;
 }
 

@@ -35,7 +35,6 @@ export class UserController {
   async loginUser(userData: LoginDto) {
     try {
       const response = await this.userService.loginUser(userData);
-      console.log('res', response);
       return response;
     } catch (error) {
       if (error instanceof RpcException) throw error;
@@ -72,19 +71,9 @@ export class UserController {
 
   @MessagePattern({ cmd: 'refreshToken' })
   async refreshToken({ refreshToken }) {
-    console.log('ref', refreshToken);
     try {
-      await this.userService.refreshToken(refreshToken);
-      // this.authService.check(refreshToken);
-      // const response = await this.userService.getUserInfo(userId);
-      return {
-        success: true,
-        data: {
-          tokens: {
-            accessToken: '',
-          },
-        },
-      };
+      const responseData = await this.userService.refreshToken(refreshToken);
+      return responseData;
     } catch (error) {
       if (error instanceof RpcException) throw error;
 

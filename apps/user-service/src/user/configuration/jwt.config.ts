@@ -5,7 +5,10 @@ export function jwtConfiguration(): JwtModuleAsyncOptions {
   return {
     imports: [ConfigModule],
     useFactory: (configService: ConfigService) => ({
-      secret: configService.get('SECRET_REGISTER_KEY'),
+      secret: configService.get('JWT_SECRET'),
+      signOptions: {
+        expiresIn: '30m',
+      },
     }),
     inject: [ConfigService],
   };

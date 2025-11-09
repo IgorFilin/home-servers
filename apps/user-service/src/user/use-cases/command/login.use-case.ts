@@ -38,7 +38,6 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     const generateJwtParams: IGenerateJwtParams = {
       id: user.id,
       deviceId,
-      email,
     };
 
     await this.tokenRepository.delete(user.id, deviceId);
