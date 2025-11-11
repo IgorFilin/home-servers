@@ -4,16 +4,22 @@ import { KnowledgeService } from './knowledge.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { envConfiguration, typeormConfiguration } from './configuration';
-import { AnswerEntity } from './entities/answer.entity';
-import { QuestionEntity } from './entities/question.entity';
-import { ArticleEntity } from './entities/article.entity';
-import { TagsEntity } from './entities/tags.entity';
-import { ViewsEntity } from './entities/views-article.entity';
+import { AnswerEntity } from './infrastructure/entities/answer.entity';
+import { QuestionEntity } from './infrastructure/entities/question.entity';
+import { ArticleEntity } from './infrastructure/entities/article.entity';
+import { TagsEntity } from './infrastructure/entities/tags.entity';
+import { ViewsEntity } from './infrastructure/entities/views-article.entity';
+import { KnowledgeRepository } from './infrastructure/repository/knowledge.repository';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConfiguration } from './configuration/jwt.config';
+import { CqrsModule } from '@nestjs/cqrs';
+import { GetArticleHandler } from './use-cases/query/get-article-query.use-case';
 
 @Module({
   imports: [
     ConfigModule.forRoot(envConfiguration()),
     TypeOrmModule.forRootAsync(typeormConfiguration()),
+    JwtModule.registerAsync(jwtConfiguration()),
     TypeOrmModule.forFeature([
       AnswerEntity,
       QuestionEntity,
@@ -21,8 +27,14 @@ import { ViewsEntity } from './entities/views-article.entity';
       TagsEntity,
       ViewsEntity,
     ]),
+    CqrsModule.forRoot(),
   ],
   controllers: [KnowledgeController],
-  providers: [KnowledgeService],
+  providers: [
+    KnowledgeService,
+    KnowledgeService,
+    KnowledgeRepository,
+    GetArticleHandler,
+  ],
 })
 export class KnowledgeModule {}

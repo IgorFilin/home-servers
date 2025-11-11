@@ -1,25 +1,39 @@
 import { Controller } from '@nestjs/common';
 import { KnowledgeService } from './knowledge.service';
 import { MessagePattern, RpcException } from '@nestjs/microservices';
+import { ERROR_EXEPTION } from '@home-servers/shared';
 
 @Controller()
 export class KnowledgeController {
-  constructor(private readonly appService: KnowledgeService) {}
+  constructor(private readonly knowledgeService: KnowledgeService) {}
 
   @MessagePattern({ cmd: 'articles' })
-  async logout() {
+  async articles({ filter }) {
     try {
-      console.log('asdasdasd');
-      return {
-        test: 'test',
-      };
+      const result = await this.knowledgeService.articles(filter);
+      return result;
     } catch (error) {
       if (error instanceof RpcException) throw error;
 
-      // throw new RpcException({
-      //   statusCode: 400,
-      //   message: ERROR_EXEPTION.REFRESH_TOKEN_ERROR,
-      // });
+      throw new RpcException({
+        statusCode: 404,
+        message: ERROR_EXEPTION.GET_ARTICLES_ERROR,
+      });
+    }
+  }
+
+  @MessagePattern({ cmd: 'article' })
+  async article({ id }) {
+    try {
+      const result = await this.knowledgeService.article(id);
+      return result;
+    } catch (error) {
+      if (error instanceof RpcException) throw error;
+
+      throw new RpcException({
+        statusCode: 404,
+        message: ERROR_EXEPTION.GET_ARTICLES_ERROR,
+      });
     }
   }
 }

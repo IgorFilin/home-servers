@@ -8,7 +8,11 @@ export class KnowledgeService {
     @Inject(KNOWLEDGE_SERVICE) private readonly knowledgeService: ClientProxy
   ) {}
 
-  articles() {
-    return this.knowledgeService.send({ cmd: 'articles' }, {});
+  articles(filter: string) {
+    return this.knowledgeService.send({ cmd: 'articles' }, { filter });
+  }
+
+  article(id: string) {
+    return this.knowledgeService.send({ cmd: 'article' }, { id });
   }
 }

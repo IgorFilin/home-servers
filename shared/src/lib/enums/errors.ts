@@ -6,4 +6,5 @@ export const ERROR_EXEPTION = {
   VALIDATION_REG: 'Ошибка валидации',
   USER_ALREADY_EXISTS: 'Такой пользователь существует',
   REFRESH_TOKEN_ERROR: 'Ошибка обновления токена',
+  GET_ARTICLES_ERROR: 'Ошибки получения статей',
 } as const;

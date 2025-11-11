@@ -97,7 +97,6 @@ export class GatewayController {
 
     return this.userService.refreshToken(refreshTokenReq).pipe(
       map((responseData) => {
-        console.log('resdata refresh', responseData);
         const responseStatus = responseData.success
           ? HttpStatus.ACCEPTED
           : HttpStatus.UNAUTHORIZED;
@@ -114,10 +113,41 @@ export class GatewayController {
 
   @Post('articles')
   articles(@Req() req: Request, @Res() res: Response): Observable<any> {
-    return this.knowledgeService.articles().pipe(
+    const filter: any = req.query?.filter || 'all';
+
+    return this.knowledgeService.articles(filter).pipe(
       map((responseData) => {
-        console.log('responseData', responseData);
-        res.send(responseData);
+        res.send({
+          success: true,
+          data: responseData,
+        });
+      }),
+      catchError((error) => {
+        throw new HttpException(
+          error.message || ERROR_EXEPTION.REGISTRATION,
+          error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      })
+    );
+  }
+
+  @Get('article')
+  article(@Req() req: Request, @Res() res: Response): Observable<any> {
+    const id: any = req.query?.id || 'all';
+
+    if (!id) {
+      throw new HttpException(
+        ERROR_EXEPTION.GET_ARTICLES_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    return this.knowledgeService.article(id).pipe(
+      map((responseData) => {
+        res.send({
+          success: true,
+          data: responseData,
+        });
       }),
       catchError((error) => {
         throw new HttpException(

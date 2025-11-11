@@ -1,10 +1,10 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
-import { AnswerEntity } from '../entities/answer.entity';
-import { QuestionEntity } from '../entities/question.entity';
-import { ArticleEntity } from '../entities/article.entity';
-import { TagsEntity } from '../entities/tags.entity';
-import { ViewsEntity } from '../entities/views-article.entity';
+import { AnswerEntity } from '../infrastructure/entities/answer.entity';
+import { QuestionEntity } from '../infrastructure/entities/question.entity';
+import { ArticleEntity } from '../infrastructure/entities/article.entity';
+import { TagsEntity } from '../infrastructure/entities/tags.entity';
+import { ViewsEntity } from '../infrastructure/entities/views-article.entity';
 
 export function typeormConfiguration(): TypeOrmModuleAsyncOptions {
   return {

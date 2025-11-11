@@ -88,7 +88,6 @@ export class UserController {
   async logout({ refreshToken }) {
     try {
       const responseData = await this.userService.logout(refreshToken);
-      console.log('resdata', responseData);
       return responseData;
     } catch (error) {
       if (error instanceof RpcException) throw error;
