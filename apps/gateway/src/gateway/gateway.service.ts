@@ -37,4 +37,10 @@ export class GatewayService {
       .send({ cmd: 'refreshToken' }, { refreshToken })
       .pipe(defaultIfEmpty(null));
   }
+
+  logout(refreshToken: string) {
+    return this.userService
+      .send({ cmd: 'logout' }, { refreshToken })
+      .pipe(defaultIfEmpty(null));
+  }
 }

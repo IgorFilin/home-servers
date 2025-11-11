@@ -83,4 +83,20 @@ export class UserController {
       });
     }
   }
+
+  @MessagePattern({ cmd: 'logout' })
+  async logout({ refreshToken }) {
+    try {
+      const responseData = await this.userService.logout(refreshToken);
+      console.log('resdata', responseData);
+      return responseData;
+    } catch (error) {
+      if (error instanceof RpcException) throw error;
+
+      throw new RpcException({
+        statusCode: 400,
+        message: ERROR_EXEPTION.REFRESH_TOKEN_ERROR,
+      });
+    }
+  }
 }

@@ -6,6 +6,7 @@ import { LoginCommand } from './use-cases/command/login.use-case';
 import { IResponseJwtTokens } from './models';
 import { UserRepository } from './infrastructure/repository/user.repository';
 import { RefreshQuery } from './use-cases/query/refresh.use-case';
+import { LogoutCommand } from './use-cases/command/logout.use-case';
 
 @Injectable()
 export class UserService {
@@ -30,5 +31,9 @@ export class UserService {
 
   refreshToken(refreshToken: string) {
     return this.queryBus.execute(new RefreshQuery(refreshToken));
+  }
+
+  logout(refreshToken: string) {
+    return this.commandBus.execute(new LogoutCommand(refreshToken));
   }
 }

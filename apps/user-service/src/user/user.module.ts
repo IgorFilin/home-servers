@@ -19,6 +19,7 @@ import { AuthService } from './application/auth/auth.service';
 import { LoginCommandHandler } from './use-cases/command/login.use-case';
 import { TokenRepository } from './infrastructure/repository/token.repository';
 import { RefreshQueryHandler } from './use-cases/query/refresh.use-case';
+import { LogoutCommandHandler } from './use-cases/command/logout.use-case';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { RefreshQueryHandler } from './use-cases/query/refresh.use-case';
     RegistrationCommandHandler,
     LoginCommandHandler,
     RefreshQueryHandler,
+    LogoutCommandHandler,
     AuthService,
   ],
 })

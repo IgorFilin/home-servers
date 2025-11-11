@@ -59,7 +59,7 @@ export class GatewayController {
         expires.setDate(expires.getDate() + 2);
 
         res.cookie('refreshToken', refreshToken, {
-          httpOnly: false,
+          httpOnly: true,
           expires,
         });
 
@@ -93,10 +93,43 @@ export class GatewayController {
 
     return this.gatewayService.refreshToken(refreshTokenReq).pipe(
       map((responseData) => {
+        console.log('resdata refresh', responseData);
         const responseStatus = responseData.success
           ? HttpStatus.ACCEPTED
           : HttpStatus.UNAUTHORIZED;
         res.status(responseStatus).send(responseData);
+      }),
+      catchError((error) => {
+        throw new HttpException(
+          error.message || ERROR_EXEPTION.REGISTRATION,
+          error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      })
+    );
+  }
+
+  @Post('logout')
+  logout(@Req() req: Request, @Res() res: Response): Observable<any> {
+    const refreshTokenReq = req.cookies.refreshToken;
+
+    if (!refreshTokenReq) {
+      throw new HttpException(
+        ERROR_EXEPTION.REFRESH_TOKEN_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+    return this.gatewayService.logout(refreshTokenReq).pipe(
+      map((responseData) => {
+        const isSuccess = responseData.success;
+        console.log('isSuccess', isSuccess);
+        if (isSuccess) {
+          res.clearCookie('refreshToken', {
+            httpOnly: true,
+            expires: new Date(),
+          });
+        }
+        console.log('res', responseData);
+        res.send(responseData);
       }),
       catchError((error) => {
         throw new HttpException(
