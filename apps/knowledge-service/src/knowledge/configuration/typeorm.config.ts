@@ -1,0 +1,30 @@
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import { AnswerEntity } from '../entities/answer.entity';
+import { QuestionEntity } from '../entities/question.entity';
+import { ArticleEntity } from '../entities/article.entity';
+import { TagsEntity } from '../entities/tags.entity';
+import { ViewsEntity } from '../entities/views-article.entity';
+
+export function typeormConfiguration(): TypeOrmModuleAsyncOptions {
+  return {
+    imports: [ConfigModule],
+    useFactory: (configService: ConfigService) => ({
+      type: 'postgres',
+      host: configService.get('BD_HOST'),
+      port: configService.get('BD_PORT'),
+      username: configService.get('BD_USERNAME'),
+      password: configService.get('BD_PASSWORD'),
+      database: configService.get('BD_DATABASE'),
+      entities: [
+        AnswerEntity,
+        QuestionEntity,
+        ArticleEntity,
+        TagsEntity,
+        ViewsEntity,
+      ],
+      synchronize: false,
+    }),
+    inject: [ConfigService],
+  };
+}

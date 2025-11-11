@@ -1,15 +1,10 @@
-import {
-  IUser,
-  LoginDto,
-  RegistrationDto,
-  USER_SERVICE,
-} from '@home-servers/shared';
+import { LoginDto, RegistrationDto, USER_SERVICE } from '@home-servers/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { defaultIfEmpty, Observable } from 'rxjs';
 
 @Injectable()
-export class GatewayService {
+export class UserService {
   constructor(
     @Inject(USER_SERVICE) private readonly userService: ClientProxy
   ) {}
