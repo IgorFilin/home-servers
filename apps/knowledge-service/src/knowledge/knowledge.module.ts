@@ -13,7 +13,8 @@ import { KnowledgeRepository } from './infrastructure/repository/knowledge.repos
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConfiguration } from './configuration/jwt.config';
 import { CqrsModule } from '@nestjs/cqrs';
-import { GetArticleHandler } from './use-cases/query/get-article-query.use-case';
+import { GetArticleHandler } from './use-cases/query/get-article.use-case';
+import { GetTagsHandler } from './use-cases/query/get-tags.use-case';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { GetArticleHandler } from './use-cases/query/get-article-query.use-case'
     KnowledgeService,
     KnowledgeRepository,
     GetArticleHandler,
+    GetTagsHandler,
   ],
 })
 export class KnowledgeModule {}

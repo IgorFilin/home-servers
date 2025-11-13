@@ -4,7 +4,10 @@
   "license": "MIT",
   "scripts": {
     "migration:gen": "nx migration:gen",
-    "migration:run": "nx migration:run"
+    "migration:run": "nx migration:run",
+    "gateway": "nx serve gateway",
+    "user": "nx serve user-service",
+    "know": "nx serve knowledge-service"
   },
   "private": true,
   "dependencies": {

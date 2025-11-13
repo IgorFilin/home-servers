@@ -36,4 +36,20 @@ export class KnowledgeController {
       });
     }
   }
+
+  @MessagePattern({ cmd: 'tags' })
+  async tags({ filter }) {
+    try {
+      const result = await this.knowledgeService.tags(filter);
+      console.log('result', result);
+      return result;
+    } catch (error) {
+      if (error instanceof RpcException) throw error;
+
+      throw new RpcException({
+        statusCode: 404,
+        message: ERROR_EXEPTION.GET_ARTICLES_ERROR,
+      });
+    }
+  }
 }

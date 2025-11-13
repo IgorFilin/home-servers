@@ -157,4 +157,24 @@ export class GatewayController {
       })
     );
   }
+
+  @Get('tags')
+  tags(@Req() req: Request, @Res() res: Response): Observable<any> {
+    const filter: any = req.query?.filter;
+
+    return this.knowledgeService.tags(filter).pipe(
+      map((responseData) => {
+        res.send({
+          success: true,
+          data: responseData,
+        });
+      }),
+      catchError((error) => {
+        throw new HttpException(
+          error.message || ERROR_EXEPTION.REGISTRATION,
+          error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      })
+    );
+  }
 }

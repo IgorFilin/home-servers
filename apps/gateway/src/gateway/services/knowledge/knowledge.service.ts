@@ -15,4 +15,8 @@ export class KnowledgeService {
   article(id: string) {
     return this.knowledgeService.send({ cmd: 'article' }, { id });
   }
+
+  tags(filter: string) {
+    return this.knowledgeService.send({ cmd: 'tags' }, { filter });
+  }
 }
