@@ -6,6 +6,6 @@ build:
     - docker
   stage: build
   script: 
-    - docker build -t CI_REGISTRY/gateway/$CI_COMMIT_SHA .
-    - docker push CI_REGISTRY/gateway
+    - docker build -t $CI_REGISTRY/gateway/$CI_COMMIT_SHA .
+    - docker push $CI_REGISTRY/gateway
   when: manual
