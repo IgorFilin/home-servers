@@ -15,6 +15,7 @@ import { jwtConfiguration } from './configuration/jwt.config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GetArticleHandler } from './use-cases/query/get-article.use-case';
 import { GetTagsHandler } from './use-cases/query/get-tags.use-case';
+import { CreateArticleCommandHandler } from './use-cases/command/create-article.use-case';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { GetTagsHandler } from './use-cases/query/get-tags.use-case';
     KnowledgeRepository,
     GetArticleHandler,
     GetTagsHandler,
+    CreateArticleCommandHandler,
   ],
 })
 export class KnowledgeModule {}

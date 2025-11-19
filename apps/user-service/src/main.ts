@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { UserModule } from './user/user.module';
-import { HttpExceptionFilter, RpcExceptionFilter } from '@home-servers/shared';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(

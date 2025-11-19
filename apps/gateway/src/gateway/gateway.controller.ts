@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { catchError, map, Observable } from 'rxjs';
 import {
+  CreateArticleDto,
   ERROR_EXEPTION,
   LoginDto,
   RegistrationDto,
@@ -111,6 +112,7 @@ export class GatewayController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('articles')
   articles(@Req() req: Request, @Res() res: Response): Observable<any> {
     const filter: any = req.query?.filter || 'all';
@@ -131,6 +133,7 @@ export class GatewayController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('article')
   article(@Req() req: Request, @Res() res: Response): Observable<any> {
     const id: any = req.query?.id || 'all';
@@ -158,6 +161,7 @@ export class GatewayController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('tags')
   tags(@Req() req: Request, @Res() res: Response): Observable<any> {
     const filter: any = req.query?.filter;
@@ -168,6 +172,31 @@ export class GatewayController {
           success: true,
           data: responseData,
         });
+      }),
+      catchError((error) => {
+        throw new HttpException(
+          error.message || ERROR_EXEPTION.REGISTRATION,
+          error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      })
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('create-article')
+  createArticle(
+    @Body()
+    createArticleDto: CreateArticleDto,
+    @Req() req: Request
+  ): Observable<any> {
+    const userId = req.user['userId'];
+    return this.knowledgeService.createArticle(createArticleDto, userId).pipe(
+      map((response) => {
+        const responseData = {
+          success: true,
+          data: response,
+        };
+        return responseData;
       }),
       catchError((error) => {
         throw new HttpException(

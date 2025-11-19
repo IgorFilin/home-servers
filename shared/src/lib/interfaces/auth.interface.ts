@@ -7,3 +7,9 @@ export interface IResponseGenerateTokens {
   accessToken: string;
   refreshToken: string;
 }
+
+export interface IDecodeToken {
+  sub: IJwtSubParams;
+  ext: string;
+  iat: string;
+}

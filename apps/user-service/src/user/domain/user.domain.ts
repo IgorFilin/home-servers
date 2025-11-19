@@ -48,32 +48,4 @@ export class UserDomain {
       ip: this._ip,
     };
   }
-
-  get id(): string {
-    return this._id;
-  }
-  get email(): string {
-    return this._email;
-  }
-  get name(): string {
-    return this._name;
-  }
-  get password(): string {
-    return this._password;
-  }
-  get acceptKey(): string {
-    return this._acceptKey;
-  }
-  get ip(): string {
-    return this._ip;
-  }
-  get role(): string {
-    return this._role;
-  }
-  get createdAt(): Date {
-    return this._createdAt;
-  }
-  get refreshTokens(): ReadonlyArray<any> {
-    return [...this._refreshTokens];
-  }
 }
