@@ -32,6 +32,4 @@ COPY --chown=nest:nest .env /app/dist/apps/home-servers/.env
 
 USER nest
 
-RUN ls -la ./dist/apps
-
 CMD ["node", "dist/apps/home-servers/main.js"]
