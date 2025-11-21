@@ -34,6 +34,7 @@ export class UserController {
   @MessagePattern({ cmd: 'login' })
   async loginUser(userData: LoginDto) {
     try {
+      console.log('попали в микросервис users login', userData);
       const response = await this.userService.loginUser(userData);
       return response;
     } catch (error) {

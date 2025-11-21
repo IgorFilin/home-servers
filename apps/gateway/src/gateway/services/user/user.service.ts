@@ -16,6 +16,7 @@ export class UserService {
   }
 
   login(userData: LoginDto): Observable<any> {
+    console.log('Отправляю ', userData);
     return this.userService
       .send({ cmd: 'login' }, userData)
       .pipe(defaultIfEmpty(null));

@@ -57,8 +57,10 @@ export class GatewayController {
     loginBody: LoginDto,
     @Res() res: Response
   ): Observable<any> {
+    console.log('в ендпоинте ', loginBody);
     return this.userService.login(loginBody).pipe(
       map((data) => {
+        console.log('Получил ответ: ', data);
         const { refreshToken, accessToken } = data.data.tokens;
         const expires = new Date();
         expires.setDate(expires.getDate() + 2);
