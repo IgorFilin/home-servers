@@ -18,6 +18,9 @@ RUN nx build $SERVICE_NAME --prod
 
 FROM node:20-alpine AS runner
 
+ARG SERVICE_NAME=gateway 
+ENV SERVICE_NAME=$SERVICE_NAME
+
 RUN adduser -S nest && addgroup -S nest
 
 WORKDIR /app
@@ -28,8 +31,6 @@ RUN npm i && chown -R nest:nest .
 
 COPY --chown=nest:nest --from=build /app/dist ./dist
 
-COPY --chown=nest:nest .env /app/dist/apps/home-servers/.env
-
 USER nest
 
-CMD ["node", "dist/apps/home-servers/main.js"]
+CMD node dist/apps/$SERVICE_NAME/main.js
