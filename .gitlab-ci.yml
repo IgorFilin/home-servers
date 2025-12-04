@@ -17,10 +17,9 @@ migrations:
   tags: 
     - docker
   script:
+    - npm add --global nx
     - npm i
-    - apt update
-    - apt install nx
-    - echo success
+    - echo bam
   only:
     - main
   when: manual
