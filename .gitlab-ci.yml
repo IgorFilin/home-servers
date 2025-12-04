@@ -21,3 +21,4 @@ migrations:
     - echo success
   only:
     - main
+  when: manual
