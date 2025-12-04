@@ -1,11 +1,25 @@
 stages:
   - build
+  - migrations
 
 build:
+  stage: build
   tags:
     - docker
-  stage: build
   script: 
     - docker build -t $CI_REGISTRY/gateway/$CI_COMMIT_SHA .
     - docker push $CI_REGISTRY/gateway
+  when: manual
+
+migrations:
+  stage: migrations
+  image: node:iron-alpine3.22
+  tags: 
+    - docker
+  script:
+    - npm add --global nx
+    - npm i
+    - echo bam
+  only:
+    - main
   when: manual
