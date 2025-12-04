@@ -18,6 +18,9 @@ migrations:
     - docker
   script:
     - npm i
+    - add-apt-repository ppa:nrwl/nx
+    - apt update
+    - apt install nx
     - echo success
   only:
     - main
