@@ -13,10 +13,14 @@ build:
 
 migrations-users:
   stage: migrations-users
-  image: node:iron-alpine3.22
+  image: igorfilin/node20_vault:v1.0
   tags: 
     - docker
   script:
+    - VAULT_TOKEN=$( vault write -field=token auth/approle/login role_id="$VAULT_ROLE_ID" secret_id="$VAULT_SECRET_ID" )
+    - echo $VAULT_TOKEN 
+    - DATA=$(vault kv get -field=password kv/external-secrets)
+    - echo $DATA
     - npm add --global nx
     - npx nx migration:run user-service
   rules:
