@@ -19,6 +19,7 @@ migrations-users:
   variables:
     VAULT_ADDR: $VAULT_ADDR
   script:
+    - apt update
     - apt install -y jq
     - echo "Проверка доступности Vault..."
     - curl -v "$VAULT_ADDR/v1/sys/health"
