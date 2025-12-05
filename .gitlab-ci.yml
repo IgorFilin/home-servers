@@ -2,6 +2,9 @@ stages:
   - build
   - migrations-users
 
+before_script:
+  - npm ci --prefer-offline --no-audit
+
 build:
   stage: build
   tags:
