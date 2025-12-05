@@ -2,8 +2,15 @@ stages:
   - build
   - migrations-users
 
+cache:
+  key: 
+    files: 
+      - package-lock.json
+  paths:
+    - .npm
+
 before_script:
-  - npm ci --prefer-offline --no-audit
+  - npm ci --cache .npm --prefer-offline
 
 build:
   stage: build
