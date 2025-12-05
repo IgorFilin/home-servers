@@ -27,6 +27,6 @@ migrations-users:
     - echo $DATA
     - npm add --global nx
     - npx nx migration:run user-service
-  rules:
-    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
-      when: manual
+  # rules:
+  #   - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
+  #     when: manual
