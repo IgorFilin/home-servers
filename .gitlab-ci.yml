@@ -13,14 +13,13 @@ build:
 
 migrations-users:
   stage: migrations-users
-  image: igorfilin/node20_vault:v1.0
+  image: igorfilin/node20_vault:v1.1
   tags: 
     - docker
   variables:
     VAULT_ADDR: $VAULT_ADDR
   script:
     - apt update
-    - apt install -y jq
     - echo "Проверка доступности Vault..."
     - curl -v "$VAULT_ADDR/v1/sys/health"
     - export VAULT_TOKEN=$( vault write -field=token auth/approle/login role_id="$VAULT_ROLE_ID" secret_id="$VAULT_SECRET_ID" )
