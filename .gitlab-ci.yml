@@ -21,9 +21,8 @@ migrations-users:
   script:
     - echo "Проверка доступности Vault..."
     - curl -v "$VAULT_ADDR/v1/sys/health"
-    - VAULT_TOKEN=$( vault write -field=token auth/approle/login role_id="$VAULT_ROLE_ID" secret_id="$VAULT_SECRET_ID" )
-    - echo $VAULT_TOKEN 
-    - DATA=$(vault kv get kv/external-secrets)
+    - export VAULT_TOKEN=$( vault write -field=token auth/approle/login role_id="$VAULT_ROLE_ID" secret_id="$VAULT_SECRET_ID" )
+    - DATA=$(vault -mount="kv" "external-secrets")
     - echo $DATA
     - npm add --global nx
     - npx nx migration:run user-service
