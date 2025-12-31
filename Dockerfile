@@ -1,6 +1,6 @@
 FROM node:20-alpine AS build
 
-ARG SERVICE_NAME=gateway 
+ARG SERVICE_NAME=gateway
 
 WORKDIR /app
 

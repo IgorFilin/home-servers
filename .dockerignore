@@ -3,8 +3,10 @@ node_modules
 .gitignore
 README.md
 dist
-.tmp
+scripts
+tmp
 .vscode
 *.log
 .history
 .env
+.nx
