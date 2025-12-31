@@ -22,7 +22,7 @@ mapfile -t ARRAY_SERVICE <<< "$SERVICES"
 for service in "${ARRAY_SERVICE[@]}"; do
   if [ "$service" != "$SHARED_SERVICE" ]; then
     BUILDED_PATH_IMAGE="${FQ_IMAGE_NAME}/${service}:${IMAGE_TAG}"
-    buildah build -t "$BUILDED_PATH_IMAGE" --build-arg SERVICE_NAME=$service
+    buildah build -t "$BUILDED_PATH_IMAGE" --build-arg SERVICE_NAME="$service"
     buildah push "$BUILDED_PATH_IMAGE"
   fi
 done
