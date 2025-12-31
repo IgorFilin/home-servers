@@ -3,21 +3,16 @@ set -euo pipefail
 
 SHARED_SERVICE=shared
 
-FQ_IMAGE_NAME=$1
-IMAGE_TAG=$2
+FILE_PATH="$1"
+FQ_IMAGE_NAME="$2"
+IMAGE_TAG="$3"
 
-if [ $# -ne 2 ]; then
-  echo "Необходимо несколько аргументов"
+if [ $# -lt 3 ]; then
+  echo "Не передено нужное количество аргументов (3)"
   exit 1
 fi
 
-SERVICES=$(npx nx show projects --affected --base=origin/main --head=HEAD --outputStyle=static )
-
-if [ -z "$SERVICES"  ]; then
-   SERVICES=$(npx nx show projects --type=app)
-fi
-
-mapfile -t ARRAY_SERVICE <<< "$SERVICES"
+IFS=' ' read -ra ARRAY_SERVICE < "$FILE_PATH"
 
 for service in "${ARRAY_SERVICE[@]}"; do
   if [ "$service" != "$SHARED_SERVICE" ]; then
