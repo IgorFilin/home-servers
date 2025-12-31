@@ -18,6 +18,7 @@ check-affected-diff:
   image: node:20-alpine
   cache: {}
   script:
+    - apk add --no-cache bash
     - npm add --global nx
     - chmod +x ./scripts/affected.sh
     - ./scripts/affected.sh > servers_affected.txt
